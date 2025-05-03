@@ -41,6 +41,14 @@ export const About = () => {
             <p className="text-gray-300 mb-6">
             I am a software developer with experience in React Native, React.js, and Next.js. I possess strong capabilities in both designing and developing web and mobile applications to meet user needs. My work spans both Frontend and Backend development, including database system design, web API development, and various systems integration. I also have experience as an IT Support, providing troubleshooting and user assistance for general computer usage.
             </p>
+            <a
+  href="https://drive.google.com/file/d/1Cd9QcUlGpJ3HAIVj8Fnz57Vs5XpfRDoJ/view?usp=sharing"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="text-blue-400 hover:text-blue-300 transition-colors my-4"
+>
+  View My Resume →
+</a>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="rounded-xl p-6 hover:-translate-y-1 transition-all">
