@@ -3,7 +3,6 @@ import { RevealOnScroll } from "../RevealOnScroll";
 import thumbnail from "../../assets/Thumbnail.jpg";
 import thumbnail2 from "../../assets/Thumbnail2.png";
 import Filecover from "../../assets/File cover.png";
-import myPDF from "../../assets/Datamining.pdf";
 
 export const Projects = () => {
   const [selectedProject, setSelectedProject] = useState(null);
@@ -22,7 +21,7 @@ export const Projects = () => {
       description:
         "Full-stack e-commerce with modern UI, secure payment integration, and customizable product inventory.",
       image: thumbnail,
-      stack: ["React", "Node.js", "Vite.js", "Tailwind css", "MySQL"],
+      stack: ["React", "Node.js", "Vite.js", "Tailwind css", "MySQL", "Supabase"],
       link: "https://filmcs-shop.vercel.app",
     },
     {

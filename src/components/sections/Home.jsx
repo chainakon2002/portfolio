@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { RevealOnScroll } from "../RevealOnScroll";
+import 'animate.css';
+
 
 export const Home = () => {
   const [text, setText] = useState("");
@@ -27,11 +29,12 @@ export const Home = () => {
             {text}
           </h1>
 
-          <p className="text-gray-400 text-lg mb-8 max-w-lg mx-auto">
-            I’m a full-stack developer who loves crafting clean, scalable web
-            applications. My goal is to build solutions that offer both
-            exceptional performance and a delightful user experience.
-          </p>
+          <p className="text-gray-400 text-lg mb-8 max-w-lg mx-auto animate__animated animate__pulse animate__infinite animate__slow">
+  I’m a full-stack developer who loves crafting clean, scalable web
+  applications. My goal is to build solutions that offer both exceptional
+  performance and a delightful user experience.
+</p>
+
           <div className="flex justify-center space-x-4">
             <a
               href="#projects"
