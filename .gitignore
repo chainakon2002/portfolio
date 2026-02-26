@@ -7,11 +7,15 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+<<<<<<< HEAD
 # Runtime data
+=======
+>>>>>>> 4cde7687a25d7cd4de5b7ce128da7ac97de0b15f
 node_modules
 dist
 dist-ssr
 *.local
+<<<<<<< HEAD
 out/
 build/
 .next/
@@ -27,11 +31,22 @@ build/
 .vscode/*
 !.vscode/extensions.json
 .idea
+=======
+
+.env
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+>>>>>>> 4cde7687a25d7cd4de5b7ce128da7ac97de0b15f
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+<<<<<<< HEAD
 
 # macOS specific
 .DS_Store
@@ -39,3 +54,5 @@ build/
 .LSOverride
 Icon?
 ._*
+=======
+>>>>>>> 4cde7687a25d7cd4de5b7ce128da7ac97de0b15f
