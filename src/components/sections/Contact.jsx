@@ -6,7 +6,7 @@ export const Contact = () => {
   return (
     <section
       id="contact"
-      className="min-h-screen flex items-center justify-center py-24 px-4"
+      className="min-h-screen flex items-center justify-center py-24 px-4 sm:px-6"
     >
       <RevealOnScroll>
         <motion.div
@@ -14,9 +14,9 @@ export const Contact = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           viewport={{ once: true }}
-          className="w-full max-w-5xl px-6 sm:px-10 md:px-14 p-8"
+          className="w-full max-w-4xl mx-auto"
         >
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-12 bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent text-center">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-10 sm:mb-12 bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent text-center">
             Get In Touch
           </h2>
 
@@ -25,31 +25,37 @@ export const Contact = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
             viewport={{ once: true }}
-            className="space-y-8 sm:space-y-10 text-white text-xl sm:text-2xl border border-white/10 p-8 sm:p-10 rounded-3xl shadow-[0_0_60px_rgba(59,130,246,0.15)] backdrop-blur-md bg-white/5"
+            className="space-y-8 text-white border border-white/10 p-6 sm:p-10 rounded-3xl shadow-[0_0_60px_rgba(59,130,246,0.15)] backdrop-blur-md bg-white/5"
           >
-            <div className="flex flex-col sm:flex-row items-center gap-6">
-              <Phone size={40} className="text-blue-400" />
+            {/* Phone */}
+            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-center sm:text-left">
+              <Phone className="text-blue-400 w-8 h-8 sm:w-10 sm:h-10 shrink-0" />
               <a
                 href="tel:+66855981689"
-                className="text-2xl sm:text-3xl text-blue-300 hover:underline"
+                className="text-lg sm:text-2xl md:text-3xl text-blue-300 hover:underline"
               >
                 +66 855981689
               </a>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center gap-6">
-              <Mail size={40} className="text-blue-400" />
-              <span className="text-2xl sm:text-3xl">chainakonsarisee@gmail.com</span>
+            {/* Email */}
+            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-center sm:text-left">
+              <Mail className="text-blue-400 w-8 h-8 sm:w-10 sm:h-10 shrink-0" />
+              <span className="text-lg sm:text-2xl md:text-3xl break-all">
+                chainakonsarisee@gmail.com
+              </span>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center gap-6">
-              <Github size={40} className="text-blue-400" />
+            {/* GitHub */}
+            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-center sm:text-left">
+              <Github className="text-blue-400 w-8 h-8 sm:w-10 sm:h-10 shrink-0" />
               <a
                 href="https://github.com/chainakon2002"
-                className="hover:underline text-blue-300 text-2xl sm:text-3xl"
+                className="hover:underline text-blue-300 text-lg sm:text-2xl md:text-3xl break-all"
                 target="_blank"
+                rel="noopener noreferrer"
               >
-                https://github.com/chainakon2002
+                github.com/chainakon2002
               </a>
             </div>
           </motion.div>

@@ -102,3 +102,19 @@ export const Projects = () => {
 
 
 
+{
+      title: "Mobile Application",
+      description:
+        "Recycle is a mobile application developed with React Native that allows users to request garbage collection services. The app includes functionalities for both regular users and staff members.",
+      image: thumbnail2,
+      stack: ["React Native", "Expo CLI", "Android Studio"],
+      link: "#",
+    },
+    {
+      title: "Application of Data Mining Techniques",
+      description:
+        "The application of data mining techniques for mushroom data classification aims to accurately distinguish between edible and poisonous mushrooms based on their external characteristics, such as cap shape, odor, and color. This can be applied in areas such as food safety and education.",
+      image: Filecover,
+      stack: ["Weka", "Decision Tree", "Naïve Bayes ", "Neural Network ", "Excel "],
+      link: "https://drive.google.com/file/d/1Pt_6YD0BIH-sEtIKWpLzFoSjzXCsvsiS/view?usp=sharing",
+    },
