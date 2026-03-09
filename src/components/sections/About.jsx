@@ -14,6 +14,7 @@ export const About = () => {
     "React.js",
     "React Native",
     "Node.js",
+    "Fulter",
   ];
 
   const backendSkills = [

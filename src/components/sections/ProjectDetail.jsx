@@ -49,7 +49,7 @@ export const ProjectDetail = () => {
           </div>
           
           <p className="text-gray-300 text-lg leading-relaxed mb-10">
-            {project.description}
+            {project.fullDescription}
           </p>
 
           <a
