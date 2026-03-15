@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { RevealOnScroll } from "../RevealOnScroll";
-import { motion, AnimatePresence } from "framer-motion"; // เพิ่ม AnimatePresence
+import { motion, AnimatePresence } from "framer-motion";
 import 'animate.css';
 
 export const Home = () => {
   const [text, setText] = useState("");
-  const [showScroll, setShowScroll] = useState(true); // เพิ่ม State สำหรับควบคุมการแสดงผล Scroll Icon
+  const [showScroll, setShowScroll] = useState(true);
   const fullText = "Hi, I'm Chainakon Sarisee";
 
   useEffect(() => {
-    // 1. ระบบพิมพ์ดีด (Typewriter)
+    // 1. ระบบพิมพ์ดีด (Typewriter) แบบหน่วงเวลา 3 วินาที
     let index = 0;
     let interval;
     const delayTimeout = setTimeout(() => {
@@ -20,17 +20,18 @@ export const Home = () => {
       }, 120); 
     }, 3000); 
 
-    // 2. ระบบเช็คการเลื่อนหน้าจอเพื่อซ่อนไอคอน
+    // 2. ระบบเช็คการเลื่อนหน้าจอเพื่อซ่อนไอคอน Scroll Down
     const handleScroll = () => {
       if (window.scrollY > 50) {
-        setShowScroll(false); // เลื่อนลงเกิน 50px ให้หายไป
+        setShowScroll(false);
       } else {
-        setShowScroll(true); // กลับไปบนสุดให้โชว์ใหม่
+        setShowScroll(true);
       }
     };
 
     window.addEventListener("scroll", handleScroll);
 
+    // ทำความสะอาดการตั้งเวลาและ Event เมื่อเปลี่ยนหน้า
     return () => {
       clearTimeout(delayTimeout);
       if (interval) clearInterval(interval);
@@ -39,40 +40,43 @@ export const Home = () => {
   }, []);
 
   return (
-    <section id="home" className="min-h-screen flex items-center justify-center relative">
+    <section id="home" className="min-h-screen flex items-center justify-center relative py-20">
       <RevealOnScroll>
-        <div className="text-center z-10 px-4">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 flex justify-center items-center h-[1em]">
-            <span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent leading-tight">
+        <div className="text-center z-10 px-6 max-w-4xl mx-auto">
+          
+          {/* หัวข้อและเคอร์เซอร์: จัดให้ยืดหยุ่นไม่ทับกันบนมือถือ */}
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 leading-tight inline-block relative">
+            <span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">
               {text}
             </span>
-            <span className="w-1 md:w-[6px] h-10 md:h-16 bg-cyan-400 ml-2 animate-pulse rounded-full"></span>
+            <span className="inline-block w-[3px] md:w-[6px] h-[1em] bg-cyan-400 ml-1 translate-y-1 animate-pulse rounded-full"></span>
           </h1>
 
-          <p className="text-gray-400 text-lg mb-8 max-w-lg mx-auto animate__animated animate__pulse animate__infinite animate__slow">
+          <p className="text-gray-400 text-base sm:text-lg mb-8 max-w-lg mx-auto animate__animated animate__pulse animate__infinite animate__slow">
             I’m a full-stack developer who loves crafting clean, scalable web
             applications. My goal is to build solutions that offer both exceptional
             performance and a delightful user experience.
           </p>
 
-          <div className="flex justify-center space-x-4">
-            <a href="#projects" className="bg-blue-500 text-white py-3 px-6 rounded font-medium transition relative overflow-hidden hover:-translate-y-0.5 hover:shadow-[0_0_15px_rgba(59,130,246,0.4)]">
+          {/* ปุ่ม: เรียงแนวตั้งบนมือถือ และแนวนอนบนจอใหญ่ */}
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:space-x-4">
+            <a href="#projects" className="w-full sm:w-auto bg-blue-500 text-white py-3 px-8 rounded font-medium transition relative overflow-hidden hover:-translate-y-0.5 hover:shadow-[0_0_15px_rgba(59,130,246,0.4)]">
               View Projects
             </a>
-            <a href="#contact" className="border border-blue-500/50 text-blue-500 py-3 px-6 rounded font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_0_15px_rgba(59,130,246,0.2)] hover:bg-blue-500/10">
+            <a href="#contact" className="w-full sm:w-auto border border-blue-500/50 text-blue-500 py-3 px-8 rounded font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_0_15px_rgba(59,130,246,0.2)] hover:bg-blue-500/10">
               Contact Me
             </a>
           </div>
         </div>
       </RevealOnScroll>
 
-      {/* ✨ ระบบซ่อนไอคอนแบบมีแอนิเมชัน Fade Out ✨ */}
+      {/* ไอคอน Scroll Down: ค่อยๆ เฟดหายไปเมื่อเลื่อนหน้าจอ */}
       <AnimatePresence>
         {showScroll && (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0, y: 20 }} // ตอนหายให้เลื่อนลงไปนิดนึงแล้วเฟดออก
+            exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.5 }}
             className="absolute bottom-10 w-full flex justify-center z-20"
           >
