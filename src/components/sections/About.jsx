@@ -10,11 +10,11 @@ export const About = () => {
     "TailwindCSS",
     "PHP",
     "Python",
-    "C#",
     "React.js",
     "React Native",
     "Node.js",
     "Fulter",
+    "Next.js",
   ];
 
   const backendSkills = [
@@ -22,9 +22,11 @@ export const About = () => {
     "Figma",
     "MySQL",
     "Visual Studio Code",
+    "Xcode",
     "Adobe Premiere Pro",
     "Adobe Photoshop",
     "Microsoft Office",
+    
     
   ]
 
