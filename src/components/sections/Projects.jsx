@@ -6,6 +6,7 @@ import thumbnail2 from "../../assets/Thumbnail2.png";
 import Filecover from "../../assets/File cover.png";
 import projectAA from "../../assets/projectAA.jpg";
 import projectmyid from "../../assets/projectMyid.jpg";
+import maxfilm from "../../assets/maxfilm.png"
 export const Projects = () => {
   const location = useLocation(); // ประกาศใช้งาน useLocation เพื่อเช็ค URL
 
@@ -66,6 +67,15 @@ export const Projects = () => {
     image: projectAA,
     stack: ["React", "Firebase", "Tailwind CSS" ],
     link: "https://2026-student-attendance-system.vercel.app",
+  },
+    {
+    id: "maxfilm",
+    title: "Max Film ERP",
+    description: "ระบบออกสัญญาว่าจ้าง ธุระกิจหนังกลางแปลง",
+    fullDescription: "ระบบนี้เป็นโมดูล ออกเอกสารสัญญาจ้าง แบบ Digital Flow ที่ช่วยลดขั้นตอนการเขียนกระดาษ โดยเน้นการใช้งานที่ง่าย",
+    image: maxfilm,
+    stack: ["React", "Firebase", "Tailwind CSS","react-pdf/renderer" ],
+    link: "https://erp-maxfilm.vercel.app",
   },
 ];
 
