@@ -8,6 +8,10 @@ export const Home = () => {
   const [showScroll, setShowScroll] = useState(true);
   const fullText = "Hi, I'm Chainakon Sarisee";
 
+  const prefix = "Hi, I'm ";
+  const prefixTyped = text.slice(0, prefix.length);
+  const nameTyped = text.slice(prefix.length);
+
   useEffect(() => {
     // 1. ระบบพิมพ์ดีด (Typewriter) แบบหน่วงเวลา 3 วินาที
     let index = 0;
@@ -46,27 +50,17 @@ export const Home = () => {
           
           {/* หัวข้อและเคอร์เซอร์: จัดให้ยืดหยุ่นไม่ทับกันบนมือถือ */}
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 leading-tight inline-block relative">
-            <span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">
-              {text}
+            <span className="text-white">
+              {prefixTyped}
             </span>
+            {nameTyped && (
+              <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-indigo-400 bg-clip-text text-transparent">
+                {nameTyped}
+              </span>
+            )}
             <span className="inline-block w-[3px] md:w-[6px] h-[1em] bg-cyan-400 ml-1 translate-y-1 animate-pulse rounded-full"></span>
           </h1>
 
-          <p className="text-gray-400 text-base sm:text-lg mb-8 max-w-lg mx-auto animate__animated animate__pulse animate__infinite animate__slow">
-            I’m a full-stack developer who loves crafting clean, scalable web
-            applications. My goal is to build solutions that offer both exceptional
-            performance and a delightful user experience.
-          </p>
-
-          {/* ปุ่ม: เรียงแนวตั้งบนมือถือ และแนวนอนบนจอใหญ่ */}
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:space-x-4">
-            <a href="#projects" className="w-full sm:w-auto bg-blue-500 text-white py-3 px-8 rounded font-medium transition relative overflow-hidden hover:-translate-y-0.5 hover:shadow-[0_0_15px_rgba(59,130,246,0.4)]">
-              View Projects
-            </a>
-            <a href="#contact" className="w-full sm:w-auto border border-blue-500/50 text-blue-500 py-3 px-8 rounded font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_0_15px_rgba(59,130,246,0.2)] hover:bg-blue-500/10">
-              Contact Me
-            </a>
-          </div>
         </div>
       </RevealOnScroll>
 
