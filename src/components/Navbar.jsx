@@ -22,7 +22,7 @@ export const Navbar = () => {
       animate={{
         height: isScrolled ? "3.5rem" : "4.5rem",
       }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       className="fixed top-0 w-full z-40 flex items-center
         bg-black/60
         backdrop-blur-xl
@@ -32,17 +32,20 @@ export const Navbar = () => {
       "
     >
       <div className="max-w-5xl mx-auto px-4 w-full">
-        <div
-          className={`flex items-center w-full transition-all duration-300 ${
-            isScrolled ? "justify-center" : "justify-start"
-          }`}
-        >
-          {/* LOGO: อยู่ซ้ายตอนอยู่บนสุด และสไลด์มาตรงกลางอย่างนุ่มนวลเมื่อ Scroll */}
+        <div className="relative flex items-center w-full">
+          {/* LOGO: ค่อยๆ เลื่อนสไลด์จากซ้ายมาตรงกลางอย่างนุ่มนวลสมูทระดับ Apple (ไม่กระโดด) */}
           <motion.a
             href="#home"
-            layout
-            transition={{ type: "spring", stiffness: 120, damping: 20 }}
-            className="font-sans text-xl sm:text-2xl font-bold tracking-tight text-white z-50 cursor-pointer hover:opacity-85 transition-opacity"
+            animate={{
+              left: isScrolled ? "50%" : "0%",
+              x: isScrolled ? "-50%" : "0%",
+            }}
+            transition={{
+              duration: 0.7,
+              ease: [0.16, 1, 0.3, 1], // Apple cubic-bezier: นุ่มนวล สมูท ละมุน ไม่กระตุก
+            }}
+            style={{ position: "relative" }}
+            className="font-sans text-xl sm:text-2xl font-bold tracking-tight text-white z-50 cursor-pointer hover:opacity-85 transition-opacity inline-block"
           >
             Film.<span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-indigo-400 bg-clip-text text-transparent">Dev</span>
           </motion.a>

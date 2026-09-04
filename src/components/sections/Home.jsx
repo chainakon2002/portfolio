@@ -11,6 +11,7 @@ export const Home = () => {
   const prefix = "Hi, I'm ";
   const prefixTyped = text.slice(0, prefix.length);
   const nameTyped = text.slice(prefix.length);
+  const isComplete = text.length === fullText.length;
 
   useEffect(() => {
     // 1. ระบบพิมพ์ดีด (Typewriter) แบบหน่วงเวลา 3 วินาที
@@ -57,6 +58,17 @@ export const Home = () => {
               <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-indigo-400 bg-clip-text text-transparent">
                 {nameTyped}
               </span>
+            )}
+            {/* 🍎 Superscript Nickname "Film" สีต่อจาก Sarisee (indigo-400 -> violet-400) มองเห็นชัดเจน 🍎 */}
+            {isComplete && (
+              <motion.span
+                initial={{ opacity: 0, y: 6, scale: 0.85 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                className="inline-block relative -top-3 sm:-top-5 md:-top-7 text-xs sm:text-sm md:text-xl font-bold bg-gradient-to-r from-indigo-400 via-violet-400 to-purple-400 bg-clip-text text-transparent ml-1 sm:ml-1.5 select-none tracking-normal"
+              >
+                Film
+              </motion.span>
             )}
             <span className="inline-block w-[3px] md:w-[6px] h-[1em] bg-cyan-400 ml-1 translate-y-1 animate-pulse rounded-full"></span>
           </h1>
