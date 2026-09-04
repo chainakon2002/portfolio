@@ -113,7 +113,19 @@ const skillCategories = [
     ],
   },
   {
-    title: "Tools & Design",
+    title: (
+      <>
+        Tools &{" "}
+        <span className="relative inline-block">
+          {/* เริ่มต้นเป็นสีขาวปกติ */}
+          <span className="text-white">Design</span>
+          {/* ค่อยๆ เปลี่ยนเป็นสี Gradient ฟ้าสดใสอย่างนุ่มนวลเมื่อเลื่อนมาถึง */}
+          <span className="absolute inset-0 bg-gradient-to-r from-sky-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent design-bloom-text pointer-events-none select-none">
+            Design
+          </span>
+        </span>
+      </>
+    ),
     groups: [
       {
         label: "Developer Tools & Environment",
@@ -308,11 +320,11 @@ export const Performance = () => {
 
       {/* 🍎 APPLE-INSPIRED TECH SPECS & STACK (Columns) 🍎 */}
       <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 sm:pt-14 pb-28 z-10">
-        <RevealOnScroll>
-          {/* Apple Minimalist Spec Columns */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-14 pt-4">
-            {skillCategories.map((cat, idx) => (
-              <div key={idx} className="flex flex-col">
+        {/* Apple Minimalist Spec Columns */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-14 pt-4">
+          {skillCategories.map((cat, idx) => (
+            <RevealOnScroll key={idx}>
+              <div className="flex flex-col">
                 <h4 className="text-xl sm:text-2xl font-bold text-white tracking-tight pb-3.5 border-b border-white/20">
                   {cat.title}
                 </h4>
@@ -330,9 +342,9 @@ export const Performance = () => {
                   ))}
                 </div>
               </div>
-            ))}
-          </div>
-        </RevealOnScroll>
+            </RevealOnScroll>
+          ))}
+        </div>
       </div>
     </section>
   );
