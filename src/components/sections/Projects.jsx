@@ -151,7 +151,7 @@ export const Projects = () => {
     <section
       id="projects"
       ref={sectionRef}
-      className="relative w-full h-screen min-h-screen bg-black overflow-hidden flex flex-col justify-between pt-20 pb-8 sm:pb-12 select-none"
+      className="relative z-20 w-full h-screen min-h-screen bg-black overflow-hidden flex flex-col justify-between pt-20 pb-8 sm:pb-12 select-none"
     >
       {/* Apple Section Header */}
       <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 flex items-end justify-between gap-4">

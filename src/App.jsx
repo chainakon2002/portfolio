@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"; // เพิ่มตัวจัดการเส้นทาง
 import "./App.css";
 import { LoadingScreen } from "./components/LoadingScreen";
@@ -11,10 +11,40 @@ import { Projects } from "./components/sections/Projects";
 import "./index.css";
 import { Contact } from "./components/sections/Contact";
 import { ProjectDetail } from "./components/sections/ProjectDetail";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (isLoaded) {
+      // Refresh ScrollTrigger เมื่อเข้าสู่หน้าหลักหลัง LoadingScreen เสร็จสิ้น
+      const timer = setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 200);
+
+      // Refresh ซ้ำเมื่อฟอนต์ทั้งหมดพร้อม
+      if (document.fonts) {
+        document.fonts.ready.then(() => {
+          ScrollTrigger.refresh();
+        });
+      }
+
+      const handleLoad = () => {
+        ScrollTrigger.refresh();
+      };
+      window.addEventListener("load", handleLoad);
+
+      return () => {
+        clearTimeout(timer);
+        window.removeEventListener("load", handleLoad);
+      };
+    }
+  }, [isLoaded]);
 
   return (
     <Router> {/* ต้องครอบทุกอย่างด้วย Router */}

@@ -54,6 +54,8 @@ export const About = () => {
           <img
             src="/MacBook_Mockups2.png"
             alt="MacBook Resume Mockup"
+            width={2048}
+            height={1237}
             className="w-full h-auto object-contain select-none"
             loading="eager"
           />
