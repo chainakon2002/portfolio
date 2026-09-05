@@ -124,149 +124,190 @@ export const About = () => {
               </span>
             </a>
           </div>
-
-          {/* Apple 2-Column Bento Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-            {/* Card 1: Work Experience */}
-            <div className="relative group rounded-[28px] sm:rounded-[32px] p-6 sm:p-8 bg-[#161617] border border-white/[0.08] hover:border-white/20 transition-all duration-500 overflow-hidden flex flex-col justify-between shadow-[0_8px_30px_rgb(0,0,0,0.5)] hover:-translate-y-1">
-              <div>
-                <p className="text-sm sm:text-base text-[#86868b] leading-relaxed mb-6">
-                  <strong className="text-white font-semibold">
-                    Front-End Developer at Mokura Development.{" "}
-                  </strong>
-                  Engineered mobile applications with React Native and modern web interfaces using React.js and Next.js, while managing agile Git collaboration and complete IT systems troubleshooting.
-                </p>
-              </div>
-
-              {/* Inside macOS-styled Window / UI Preview */}
-              <div className="rounded-[20px] bg-[#0d0d0e] border border-white/[0.08] p-5 sm:p-6 overflow-hidden">
-                {/* Traffic lights header */}
-                <div className="flex items-center justify-between pb-3.5 border-b border-white/[0.08] mb-4">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
-                  </div>
-                  <span className="text-[11px] font-mono text-[#86868b]">
-                    experience.mokura
-                  </span>
-                </div>
-
-                {/* Job Details */}
-                <div>
-                  <div className="flex items-start justify-between gap-2 mb-2">
-                    <div>
-                      <h4 className="text-base sm:text-lg font-bold text-white tracking-tight">
-                        Front-End Developer
-                      </h4>
-                      <p className="text-xs sm:text-sm text-blue-400 font-medium">
-                        Mokura Development (Thailand)
-                      </p>
-                    </div>
-                    <span className="text-[11px] sm:text-xs text-[#86868b] font-medium px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] whitespace-nowrap">
-                      May 2024 – Aug 2024
-                    </span>
-                  </div>
-
-                  <ul className="space-y-2 text-xs sm:text-sm text-neutral-300 mt-4 leading-relaxed">
-                    <li className="flex items-start gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-1.5 flex-shrink-0" />
-                      <span>Developed cross-platform mobile apps using React Native</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 mt-1.5 flex-shrink-0" />
-                      <span>Built responsive web applications with React.js and Next.js</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 mt-1.5 flex-shrink-0" />
-                      <span>Practiced real-world Agile workflows with Git & modern CI/CD standards</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-teal-400 mt-1.5 flex-shrink-0" />
-                      <span>Delivered IT support, hardware diagnostics & network troubleshooting</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 2: Education & Certification */}
-            <div className="relative group rounded-[28px] sm:rounded-[32px] p-6 sm:p-8 bg-[#161617] border border-white/[0.08] hover:border-white/20 transition-all duration-500 overflow-hidden flex flex-col justify-between shadow-[0_8px_30px_rgb(0,0,0,0.5)] hover:-translate-y-1">
-              <div>
-                <p className="text-sm sm:text-base text-[#86868b] leading-relaxed mb-6">
-                  <strong className="text-white font-semibold">
-                    Academic foundation. Continuous evolution.{" "}
-                  </strong>
-                  Graduated with a Bachelor of Science in Computer Science, complemented by intensive Full Stack Web Development training at Code Camp Academy.
-                </p>
-              </div>
-
-              {/* Inside macOS-styled Window / UI Preview */}
-              <div className="rounded-[20px] bg-[#0d0d0e] border border-white/[0.08] p-5 sm:p-6 overflow-hidden">
-                {/* Traffic lights header */}
-                <div className="flex items-center justify-between pb-3.5 border-b border-white/[0.08] mb-4">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
-                  </div>
-                  <span className="text-[11px] font-mono text-[#86868b]">
-                    academic-history.edu
-                  </span>
-                </div>
-
-                {/* Education Timeline */}
-                <div className="space-y-4">
-                  {/* University */}
-                  <div className="pb-3 border-b border-white/[0.06]">
-                    <div className="flex items-start justify-between gap-2">
-                      <h4 className="text-sm sm:text-base font-bold text-white tracking-tight">
-                        Bachelor’s in Computer Science
-                      </h4>
-                      <span className="text-[11px] text-[#86868b] font-medium whitespace-nowrap">
-                        2021 – 2024
-                      </span>
-                    </div>
-                    <p className="text-xs sm:text-sm text-neutral-400 mt-0.5">
-                      Faculty of Science and Technology • Sakon Nakhon Rajabhat University
-                    </p>
-                  </div>
-
-                  {/* Code Camp Academy */}
-                  <div className="pb-3 border-b border-white/[0.06]">
-                    <div className="flex items-start justify-between gap-2">
-                      <h4 className="text-sm sm:text-base font-bold text-white tracking-tight">
-                        Full Stack Web Development
-                      </h4>
-                      <span className="text-[11px] text-blue-400 font-semibold uppercase tracking-wider">
-                        Certified
-                      </span>
-                    </div>
-                    <p className="text-xs sm:text-sm text-neutral-400 mt-0.5">
-                      Code Camp Academy
-                    </p>
-                  </div>
-
-                  {/* High School */}
-                  <div>
-                    <div className="flex items-start justify-between gap-2">
-                      <h4 className="text-sm sm:text-base font-bold text-white tracking-tight">
-                        High School – Science & Math
-                      </h4>
-                      <span className="text-[11px] text-[#86868b] font-medium whitespace-nowrap">
-                        2015 – 2021
-                      </span>
-                    </div>
-                    <p className="text-xs sm:text-sm text-neutral-400 mt-0.5">
-                      Akatumnuaysuksa School, Thailand
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </RevealOnScroll>
-      </div>
-    </section>
-  );
-};
+
+        {/* ============================================================ */}
+        {/* 🍎 APPLE STORY SECTION 1: ประวัติการศึกษา (Education) 🍎 */}
+        {/* ============================================================ */}
+        <div className="border-t border-white/[0.1] pt-16 sm:pt-24 mt-16 sm:mt-24">
+          <RevealOnScroll>
+              {/* Apple Eyebrow */}
+              <p className="text-sm sm:text-base font-medium text-[#86868b] mb-3">
+                Education & Academic Foundation
+              </p>
+
+              {/* Giant Apple Editorial Headline */}
+              <h3 className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.06] mb-12 sm:mb-16 max-w-4xl">
+                Built on strong fundamentals.
+              </h3>
+
+              {/* Apple 2-Column Story & Spec Layout */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+                {/* Left Column: Narrative Story */}
+                <div className="lg:col-span-7 space-y-6 text-base sm:text-lg md:text-xl text-[#86868b] leading-relaxed">
+                  <p>
+                    Graduated with a Bachelor of Science in{" "}
+                    <strong className="text-white font-semibold">
+                      Computer Science
+                    </strong>{" "}
+                    from Sakon Nakhon Rajabhat University, establishing a rigorous
+                    grasp of software architecture, data structures, algorithm design,
+                    database management, and system-level computing.
+                  </p>
+                  <p>
+                    Deepened practical industry capability through intensive training
+                    in{" "}
+                    <strong className="text-white font-semibold">
+                      Full Stack Web Development
+                    </strong>{" "}
+                    at Code Camp Academy, gaining hands-on mastery in modern JavaScript
+                    frameworks, RESTful API design, state management, and production
+                    deployment workflows.
+                  </p>
+                </div>
+
+                {/* Right Column: Apple Spec Callouts */}
+                <div className="lg:col-span-5 space-y-8">
+                  {/* Spec 1: Bachelor Degree */}
+                  <div>
+                    <p className="text-xs sm:text-sm text-[#86868b] mb-1.5 font-normal">
+                      Faculty of Science and Technology • 2021 — 2024
+                    </p>
+                    <h4 className="text-2xl sm:text-3xl font-bold text-white tracking-tight leading-snug">
+                      Bachelor’s in Computer Science
+                    </h4>
+                    <p className="text-sm sm:text-base text-[#86868b] mt-1">
+                      Sakon Nakhon Rajabhat University
+                    </p>
+                  </div>
+
+                  {/* Spec 2: Full Stack BootCamp */}
+                  <div className="border-t border-white/[0.08] pt-8">
+                    <p className="text-xs sm:text-sm text-[#2997ff] mb-1.5 font-medium">
+                      Code Camp Academy • Certified
+                    </p>
+                    <h4 className="text-2xl sm:text-3xl font-bold text-white tracking-tight leading-snug">
+                      Full Stack Web Development
+                    </h4>
+                    <p className="text-sm sm:text-base text-[#86868b] mt-1">
+                      Intensive web architecture & modern frontend/backend engineering
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </RevealOnScroll>
+          </div>
+
+          {/* ============================================================ */}
+          {/* 🍎 APPLE STORY SECTION 2: ประวัติการฝึกงาน (Internship) 🍎 */}
+          {/* ============================================================ */}
+          <div className="border-t border-white/[0.1] pt-16 sm:pt-24 mt-16 sm:mt-24">
+            <RevealOnScroll>
+              {/* Apple Eyebrow */}
+              <p className="text-sm sm:text-base font-medium text-[#86868b] mb-3">
+                Work Experience & Internship
+              </p>
+
+              {/* Giant Apple Editorial Headline */}
+              <h3 className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.06] mb-12 sm:mb-16 max-w-4xl">
+                Engineering real-world impact.
+              </h3>
+
+              {/* Apple 2-Column Story & Spec Layout */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+                {/* Left Column: Narrative Story */}
+                <div className="lg:col-span-7 space-y-6 text-base sm:text-lg md:text-xl text-[#86868b] leading-relaxed">
+                  <p>
+                    At{" "}
+                    <strong className="text-white font-semibold">
+                      Mokura Development (Thailand)
+                    </strong>
+                    , served as a Front-End Developer building cross-platform mobile
+                    applications using{" "}
+                    <strong className="text-white font-semibold">
+                      React Native
+                    </strong>{" "}
+                    and delivering performant, responsive web applications with{" "}
+                    <strong className="text-white font-semibold">
+                      React.js and Next.js
+                    </strong>
+                    .
+                  </p>
+                  <p>
+                    Practiced industry-standard{" "}
+                    <strong className="text-white font-semibold">
+                      Agile workflows
+                    </strong>{" "}
+                    with Git version control, collaborative sprint reviews, and
+                    continuous delivery routines. Simultaneously provided
+                    comprehensive IT infrastructure diagnostics, hardware maintenance,
+                    and network stability across operational systems.
+                  </p>
+
+                  {/* Apple Style Minimal Badges */}
+                  <div className="pt-4 flex flex-wrap gap-2">
+                    {[
+                      "React Native",
+                      "Next.js",
+                      "React.js",
+                      "Agile & Git",
+                      "IT Infrastructure",
+                    ].map((badge) => (
+                      <span
+                        key={badge}
+                        className="text-xs sm:text-sm text-[#86868b] px-3.5 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08]"
+                      >
+                        {badge}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Right Column: Apple Spec Callouts */}
+                <div className="lg:col-span-5 space-y-8">
+                  {/* Spec 1: Role & Company */}
+                  <div>
+                    <p className="text-xs sm:text-sm text-[#86868b] mb-1.5 font-normal">
+                      Mokura Development (Thailand) • May 2024 — Aug 2024
+                    </p>
+                    <h4 className="text-2xl sm:text-3xl font-bold text-white tracking-tight leading-snug">
+                      Front-End Developer
+                    </h4>
+                    <p className="text-sm sm:text-base text-[#86868b] mt-1">
+                      Cross-platform mobile applications and modern web interfaces
+                    </p>
+                  </div>
+
+                  {/* Spec 2: Core Engineering Stacks */}
+                  <div className="border-t border-white/[0.08] pt-6">
+                    <p className="text-xs sm:text-sm text-[#86868b] mb-1.5 font-normal">
+                      Mobile & Web Engineering
+                    </p>
+                    <h4 className="text-2xl sm:text-3xl font-bold text-white tracking-tight leading-snug">
+                      React Native & Next.js
+                    </h4>
+                    <p className="text-sm sm:text-base text-[#86868b] mt-1">
+                      Component-driven architecture, RESTful APIs, and responsive UX
+                    </p>
+                  </div>
+
+                  {/* Spec 3: Agile & IT Diagnostics */}
+                  <div className="border-t border-white/[0.08] pt-6">
+                    <p className="text-xs sm:text-sm text-[#86868b] mb-1.5 font-normal">
+                      Operations & Collaboration
+                    </p>
+                    <h4 className="text-xl sm:text-2xl font-bold text-white tracking-tight leading-snug">
+                      Git Agile & IT Systems
+                    </h4>
+                    <p className="text-sm sm:text-base text-[#86868b] mt-1">
+                      Sprint workflows, hardware maintenance, and network troubleshooting
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+    );
+  };

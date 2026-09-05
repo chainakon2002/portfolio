@@ -23,7 +23,7 @@ export const Navbar = () => {
         height: isScrolled ? "3.5rem" : "4.5rem",
       }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed top-0 w-full z-40 flex items-center
+      className="fixed top-0 w-full z-[110] flex items-center
         bg-black/60
         backdrop-blur-xl
         backdrop-saturate-150
