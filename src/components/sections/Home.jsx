@@ -6,22 +6,30 @@ import 'animate.css';
 export const Home = () => {
   const [text, setText] = useState("");
   const [showScroll, setShowScroll] = useState(true);
+  const [dimPrefix, setDimPrefix] = useState(false);
   const fullText = "Hi, I'm Chainakon Sarisee";
 
-  const prefix = "Hi, I'm ";
+  const prefix = "Hi, I'm";
   const prefixTyped = text.slice(0, prefix.length);
-  const nameTyped = text.slice(prefix.length);
+  const hasSpace = text.length > prefix.length;
+  const nameTyped = text.length > prefix.length ? text.slice(prefix.length + 1) : "";
   const isComplete = text.length === fullText.length;
 
   useEffect(() => {
     // 1. ระบบพิมพ์ดีด (Typewriter) แบบหน่วงเวลา 3 วินาที
     let index = 0;
     let interval;
+    let dimTimeout;
     const delayTimeout = setTimeout(() => {
       interval = setInterval(() => {
         index++; 
         setText(fullText.substring(0, index));
-        if (index >= fullText.length) clearInterval(interval);
+        if (index >= fullText.length) {
+          clearInterval(interval);
+          dimTimeout = setTimeout(() => {
+            setDimPrefix(true);
+          }, 800);
+        }
       }, 120); 
     }, 3000); 
 
@@ -40,6 +48,7 @@ export const Home = () => {
     return () => {
       clearTimeout(delayTimeout);
       if (interval) clearInterval(interval);
+      if (dimTimeout) clearTimeout(dimTimeout);
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
@@ -51,14 +60,38 @@ export const Home = () => {
           
           {/* หัวข้อและเคอร์เซอร์: จัดให้ยืดหยุ่นไม่ทับกันบนมือถือ */}
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 leading-tight inline-block relative">
-            <span className="text-white">
-              {prefixTyped}
+            {/* 🍎 Prefix: "Hi, I'm" ครอบด้วย relative inline-block เพื่อให้เลเยอร์ทับกันตรงตำแหน่ง 100% บนทุกขนาดจอ 🍎 */}
+            <span className="relative inline-block">
+              {/* เลเยอร์ Gradient เริ่มต้น */}
+              <span
+                className={`bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent transition-opacity duration-[2200ms] ease-in-out ${
+                  dimPrefix ? "opacity-0" : "opacity-100"
+                }`}
+              >
+                {prefixTyped}
+              </span>
+
+              {/* เลเยอร์สีขาวซอฟต์ดิม (เฟดทับตรงจุดแบบ 1:1 ไม่มีเหลื่อมบนมือถือ) */}
+              <span
+                aria-hidden="true"
+                className={`absolute inset-0 text-[#a1a1a6] transition-opacity duration-[2200ms] ease-in-out pointer-events-none select-none ${
+                  dimPrefix ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                {prefixTyped}
+              </span>
             </span>
+
+            {/* เว้นวรรคอย่างถูกต้อง */}
+            {hasSpace && " "}
+
+            {/* 🍎 Name: "Chainakon Sarisee" สว่างคมชัดด้วย Gradient 🍎 */}
             {nameTyped && (
-              <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-indigo-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent">
                 {nameTyped}
               </span>
             )}
+
             {/* 🍎 Superscript Nickname "Film" สีต่อจาก Sarisee (indigo-400 -> violet-400) มองเห็นชัดเจน 🍎 */}
             {isComplete && (
               <motion.span

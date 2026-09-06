@@ -1,10 +1,29 @@
-import { useEffect } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 export const AppleProjectModal = ({ project, onClose }) => {
+  const [isClosing, setIsClosing] = useState(false);
+  const isClosingRef = useRef(false);
+  const scrollRef = useRef(null);
+
+  const handleClose = useCallback(() => {
+    if (isClosingRef.current) return;
+    isClosingRef.current = true;
+    setIsClosing(true);
+  }, []);
+
+  useEffect(() => {
+    isClosingRef.current = false;
+    setIsClosing(false);
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = 0;
+    }
+  }, [project]);
+
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") handleClose();
     };
     window.addEventListener("keydown", handleKeyDown);
     const originalOverflow = document.body.style.overflow;
@@ -14,7 +33,7 @@ export const AppleProjectModal = ({ project, onClose }) => {
       window.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = originalOverflow;
     };
-  }, [onClose]);
+  }, [handleClose]);
 
   if (!project) return null;
 
@@ -134,38 +153,70 @@ export const AppleProjectModal = ({ project, onClose }) => {
   };
 
   return createPortal(
-    <div
-      className="fixed inset-0 z-[100] bg-black/85 backdrop-blur-2xl flex items-start justify-center pt-20 sm:pt-24 lg:pt-28 px-2 sm:px-6 lg:px-8 overflow-hidden"
-      onClick={onClose}
-    >
-      {/* 🍎 Apple Sheet Card (Expanded Width & Docked to Bottom with Navbar Clearance) 🍎 */}
-      <div
-        className="relative w-full max-w-[1180px] h-[calc(100vh-5rem)] sm:h-[calc(100vh-6rem)] lg:h-[calc(100vh-7rem)] bg-[#0a0a0c] border-t border-x border-white/15 rounded-t-[32px] sm:rounded-t-[44px] rounded-b-none shadow-[0_-10px_60px_rgba(0,0,0,0.9)] overflow-hidden flex flex-col transition-all animate-in fade-in slide-in-from-bottom-8 duration-300 select-text"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Sticky Top-Right Close Button (X) */}
-        <div className="sticky top-6 sm:top-8 z-50 flex justify-end pr-6 sm:pr-10 pointer-events-none -mb-10 sm:-mb-12">
-          <button
-            onClick={onClose}
-            aria-label="Close details"
-            className="pointer-events-auto w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white text-black hover:bg-neutral-200 flex items-center justify-center font-bold transition-all duration-200 hover:scale-105 active:scale-95 shadow-2xl cursor-pointer"
+    <AnimatePresence mode="wait" onExitComplete={onClose}>
+      {!isClosing && (
+        <motion.div
+          key="apple-modal-overlay"
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: 1,
+            transition: { duration: 0.35, ease: "easeOut" },
+          }}
+          exit={{
+            opacity: 0,
+            transition: { duration: 0.28, ease: "easeIn" },
+          }}
+          className="fixed inset-0 z-[100] bg-black/85 backdrop-blur-2xl flex items-start justify-center pt-20 sm:pt-24 lg:pt-28 px-2 sm:px-6 lg:px-8 overflow-hidden"
+          onClick={handleClose}
+        >
+          {/* 🍎 Apple Sheet Card (Expanded Width & Docked to Bottom with Navbar Clearance) 🍎 */}
+          <motion.div
+            key="apple-modal-sheet"
+            initial={{ y: "100%" }}
+            animate={{
+              y: "0%",
+              transition: {
+                duration: 0.52,
+                ease: [0.16, 1, 0.3, 1], // Apple fluid easing
+              },
+            }}
+            exit={{
+              y: "100%",
+              transition: {
+                duration: 0.35,
+                ease: [0.16, 1, 0.3, 1],
+              },
+            }}
+            style={{ willChange: "transform" }}
+            className="relative w-full max-w-[1180px] h-[calc(100vh-5rem)] sm:h-[calc(100vh-6rem)] lg:h-[calc(100vh-7rem)] bg-[#0a0a0c] border-t border-x border-white/15 rounded-t-[32px] sm:rounded-t-[44px] rounded-b-none shadow-[0_-10px_60px_rgba(0,0,0,0.9)] overflow-hidden flex flex-col select-text"
+            onClick={(e) => e.stopPropagation()}
           >
-            <svg
-              className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.5]"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          </button>
-        </div>
+            {/* Sticky Top-Right Close Button (X) */}
+            <div className="sticky top-6 sm:top-8 z-50 flex justify-end pr-6 sm:pr-10 pointer-events-none -mb-10 sm:-mb-12">
+              <button
+                onClick={handleClose}
+                aria-label="Close details"
+                className="pointer-events-auto w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white text-black hover:bg-neutral-200 flex items-center justify-center font-bold transition-all duration-200 hover:scale-105 active:scale-95 shadow-2xl cursor-pointer"
+              >
+                <svg
+                  className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.5]"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
 
-        {/* Scrollable Content (Sleek Apple Layout with Generous Spacing) */}
-        <div className="overflow-y-auto h-full px-6 sm:px-14 lg:px-20 pt-8 sm:pt-12 pb-20 sm:pb-24 space-y-12 sm:space-y-16">
+            {/* Scrollable Content (Sleek Apple Layout with Generous Spacing) */}
+            <div
+              ref={scrollRef}
+              className="overflow-y-auto h-full px-6 sm:px-14 lg:px-20 pt-8 sm:pt-12 pb-20 sm:pb-24 space-y-12 sm:space-y-16"
+            >
           {/* Eyebrow & Giant Apple Headline (Matching Image 2 Top) */}
           <div>
             <p className="text-xs sm:text-sm font-semibold tracking-wider text-[#86868b] uppercase mb-2.5">
@@ -257,8 +308,10 @@ export const AppleProjectModal = ({ project, onClose }) => {
             )}
           </div>
         </div>
-      </div>
-    </div>,
-    document.body
-  );
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>,
+document.body
+);
 };
