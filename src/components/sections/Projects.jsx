@@ -23,6 +23,8 @@ export const Projects = () => {
   const headerRef = useRef(null);
   const m5GradientRef = useRef(null);
   const aboutGradientRef = useRef(null);
+  const project1MacbookRef = useRef(null);
+  const project1TriggerRef = useRef(null);
 
   // Scroll to section on hash change
   useEffect(() => {
@@ -167,6 +169,33 @@ export const Projects = () => {
     { scope: headerRef }
   );
 
+  // 🍎 Featured Project 1 MacBook Slide-in Animation (peeks in from left edge like About Me) 🍎
+  useGSAP(
+    () => {
+      if (!project1MacbookRef.current) return;
+
+      gsap.fromTo(
+        project1MacbookRef.current,
+        {
+          x: "-100%", // ซ่อนอยู่ด้านซ้ายนอกจอ
+          opacity: 0.2,
+        },
+        {
+          x: "-18%", // สไลด์ออกมาและหยุดให้โผล่มาประมาณครึ่งเครื่อง (~58% อยู่บนหน้าจอ)
+          opacity: 1,
+          duration: 2.7, // สไลด์ออกมาช้าๆ นุ่มนวล มีระดับ เท่ากับ About Me
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: project1TriggerRef.current || project1MacbookRef.current,
+            start: "top 75%",
+            once: true, // เล่นรอบเดียวและอยู่ถาวร
+          },
+        }
+      );
+    },
+    { scope: project1TriggerRef }
+  );
+
   // Arrow button handlers (smooth scroll by card width)
   const handlePrev = () => {
     const cardStep = window.innerWidth > 768 ? 580 : 340;
@@ -184,7 +213,7 @@ export const Projects = () => {
   };
 
   return (
-    <div id="projects" className="relative z-20 w-full bg-black text-white">
+    <div id="projects" className="relative z-20 w-full bg-black text-white overflow-hidden">
       {/* ============================================================ */}
       {/* 🍎 MASTER SECTION HEADER: FEATURED PROJECTS 🍎 */}
       {/* ============================================================ */}
@@ -243,42 +272,77 @@ export const Projects = () => {
 
           {/* 2-Column Apple Showcase */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-            {/* Left: Device Preview Frame with Apple Capsule Button */}
-            <div className="lg:col-span-7 flex flex-col items-center">
-              <button
-                type="button"
+            {/* Left: 🍎 MacBook Mockup: โผล่มาครึ่งจอจากด้านซ้าย พร้อมปุ่ม Apple Capsule 🍎 */}
+            <div
+              ref={project1TriggerRef}
+              className="lg:col-span-7 flex flex-col items-center lg:items-start macbook-left-bleed relative"
+            >
+              <div
+                role="button"
+                tabIndex={0}
                 onClick={() => setSelectedProject(projects[0])}
-                className="block text-left relative aspect-[16/10] w-full rounded-[24px] sm:rounded-[32px] overflow-hidden bg-[#161617] border border-white/[0.1] shadow-[0_25px_60px_rgba(0,0,0,0.85)] group cursor-pointer focus:outline-none"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setSelectedProject(projects[0]);
+                  }
+                }}
+                className="group cursor-pointer focus:outline-none relative flex justify-start select-none w-auto"
+                aria-label="Open E-Commerce Web App details"
               >
-                <img
-                  src={thumbnail}
-                  alt="E-Commerce Web App"
-                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-20 transition-opacity" />
-              </button>
+                {/* Ambient Apple Glow */}
+                <div className="absolute -inset-6 bg-gradient-to-r from-blue-500/25 via-cyan-500/15 to-transparent blur-3xl rounded-full pointer-events-none -z-10" />
 
-              {/* 🍎 Apple M5-style Animated Capsule Button (Circle -> Pill on scroll) 🍎 */}
-              <AppleCapsuleButton
-                onClick={() => setSelectedProject(projects[0])}
-                text="Explore project details"
-              />
+                {/* 🍎 MacBook Mockup Container (โผล่มาครึ่งจอจากขอบซ้าย - ปลดล็อกขนาดให้ใหญ่เต็มตาจริง) 🍎 */}
+                <div
+                  ref={project1MacbookRef}
+                  className="relative transform-gpu pointer-events-auto"
+                  style={{
+                    width: "clamp(550px, 65vw, 1050px)",
+                    maxWidth: "none",
+                    willChange: "transform",
+                  }}
+                >
+                  <img
+                    src="/MacBook_Mockups_projeck.png"
+                    alt="E-Commerce Web App on MacBook"
+                    width={2048}
+                    height={1235}
+                    className="w-full h-auto object-contain select-none filter drop-shadow-[0_25px_60px_rgba(0,0,0,0.85)] group-hover:scale-[1.02] transition-transform duration-700 ease-out"
+                    style={{ maxWidth: "none" }}
+                    loading="eager"
+                  />
+                </div>
+              </div>
+
+              {/* 🍎 Apple M5-style Under-MacBook Bar (Caption + Centered Capsule Button) 🍎 */}
+              <div className="mt-4 sm:mt-5 flex flex-col sm:flex-row items-center justify-between w-full pl-6 sm:pl-10 lg:pl-14 gap-4">
+                <p className="text-xs text-[#86868b] tracking-tight font-medium hidden sm:block select-none">
+                  Film CS Store • Web Architecture
+                </p>
+                <div className="sm:mr-12 md:mr-20 lg:mr-28">
+                  <AppleCapsuleButton
+                    onClick={() => setSelectedProject(projects[0])}
+                    text="Explore project details"
+                  />
+                </div>
+              </div>
             </div>
 
-            {/* Right: Apple M5-style Tech Chips, Narrative Story & Spec Callouts */}
-            <div className="lg:col-span-5 space-y-6">
+            {/* Right: 🍎 Apple Editorial Story & Spec Callouts (Matching Reference Image) 🍎 */}
+            <div className="lg:col-span-5 flex flex-col justify-center space-y-6 lg:pl-6 xl:pl-10">
 
-              {/* Editorial Narrative */}
-              <p className="text-xl sm:text-2xl lg:text-[26px] font-medium text-white tracking-tight leading-[1.35]">
+              {/* Editorial Narrative (Matching Apple Reference Headline Typography) */}
+              <p className="text-2xl sm:text-3xl lg:text-[28px] xl:text-[32px] font-semibold text-white tracking-tight leading-[1.28] max-w-xl">
                 A complete full-stack e-commerce platform engineered for scale. Built with React and Node.js for lightning-fast responsiveness, reactive cart state, and dynamic inventory control.
               </p>
 
-              {/* 2 Clean Spec Callouts */}
-              <div className="space-y-2 pt-2">
-                <p className="text-base sm:text-lg lg:text-xl font-medium text-white tracking-tight">
+              {/* 2 Clean Spec Callouts (Matching Reference Purple / Gradient Highlights) */}
+              <div className="space-y-2.5 pt-1">
+                <p className="text-lg sm:text-xl lg:text-[21px] font-medium text-[#c084fc] tracking-tight">
                   Component-driven UI styled with Tailwind CSS
                 </p>
-                <p className="text-base sm:text-lg lg:text-xl font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#2997ff] to-[#a855f7] tracking-tight">
+                <p className="text-lg sm:text-xl lg:text-[21px] font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#2997ff] via-[#a855f7] to-[#f472b6] tracking-tight">
                   Production deployed on Vercel with real-time cloud sync
                 </p>
               </div>
@@ -289,10 +353,10 @@ export const Projects = () => {
                   href="https://filmcs-shop.vercel.app"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-sm sm:text-base font-medium text-[#2997ff] hover:text-[#52a9ff] transition-colors group/live"
+                  className="inline-flex items-center gap-1.5 text-base sm:text-lg font-medium text-[#2997ff] hover:text-[#52a9ff] transition-colors group/live"
                 >
                   <span>Visit Live Store</span>
-                  <span className="text-lg transition-transform group-hover/live:translate-x-1">›</span>
+                  <span className="text-xl transition-transform group-hover/live:translate-x-1">›</span>
                 </a>
               </div>
             </div>
@@ -393,144 +457,144 @@ export const Projects = () => {
             </h2>
           </div>
 
-        {/* Apple-style Navigation Arrows */}
-        <div className="flex items-center gap-2.5 sm:gap-3">
-          <button
-            onClick={handlePrev}
-            aria-label="Previous project"
-            className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center backdrop-blur-md border border-white/10 transition-all active:scale-95 cursor-pointer shadow-lg"
-          >
-            <svg
-              className="w-5 h-5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+          {/* Apple-style Navigation Arrows */}
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <button
+              onClick={handlePrev}
+              aria-label="Previous project"
+              className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center backdrop-blur-md border border-white/10 transition-all active:scale-95 cursor-pointer shadow-lg"
             >
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
-          </button>
-          <button
-            onClick={handleNext}
-            aria-label="Next project"
-            className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center backdrop-blur-md border border-white/10 transition-all active:scale-95 cursor-pointer shadow-lg"
-          >
-            <svg
-              className="w-5 h-5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      {/* Horizontal Cards Carousel Track */}
-      <div className="w-full overflow-visible py-4 my-auto">
-        <div
-          ref={trackRef}
-          className="flex gap-6 sm:gap-8 px-6 sm:px-10 lg:px-16 w-max will-change-transform"
-        >
-          {projects.map((project) => (
-            <div
-              key={project.id}
-              className="w-[320px] sm:w-[460px] md:w-[520px] lg:w-[560px] flex-shrink-0 group cursor-default"
-            >
-              {/* Apple Rounded Card Box */}
-              <div 
-                onClick={() => setSelectedProject(project)}
-                className="relative aspect-[16/10] w-full rounded-[24px] sm:rounded-[28px] overflow-hidden bg-[#161617] border border-white/[0.08] group-hover:border-white/20 transition-all duration-500 shadow-[0_8px_30px_rgb(0,0,0,0.5)] cursor-pointer"
+              <svg
+                className="w-5 h-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               >
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-                />
-                {/* Subtle vignette overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity" />
-
-                {/* External link button overlay if available */}
-                {project.link && project.link !== "#" && (
-                  <a
-                    href={project.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    className="absolute bottom-3.5 right-3.5 w-9 h-9 rounded-full bg-black/60 hover:bg-black/80 text-white/90 hover:text-white flex items-center justify-center backdrop-blur-md border border-white/20 transition-all duration-300 hover:scale-110 shadow-md z-10"
-                    title="Open live website"
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                      <polyline points="15 3 21 3 21 9" />
-                      <line x1="10" y1="14" x2="21" y2="3" />
-                    </svg>
-                  </a>
-                )}
-              </div>
-
-              {/* Apple-style Content Underneath */}
-              <div className="mt-4 sm:mt-5">
-                <p className="text-sm sm:text-base text-[#86868b] leading-relaxed line-clamp-3">
-                  <strong className="text-white font-semibold">
-                    {project.title}.{" "}
-                  </strong>
-                  {project.description}
-                </p>
-
-                {/* Tech Stack Pills */}
-                <div className="flex flex-wrap items-center gap-2 mt-3.5">
-                  {project.stack.map((tech, idx) => (
-                    <span
-                      key={idx}
-                      className="text-[11px] sm:text-xs px-2.5 py-1 rounded-full bg-white/[0.04] text-neutral-300 border border-white/[0.08]"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Action Link */}
-                <div className="mt-4 flex items-center gap-4">
-                  <button
-                    type="button"
-                    onClick={() => setSelectedProject(project)}
-                    className="text-xs sm:text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors inline-flex items-center gap-1.5 group/link cursor-pointer"
-                  >
-                    <span>View Project Details</span>
-                    <span className="transition-transform group-hover/link:translate-x-1">
-                      →
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
+            <button
+              onClick={handleNext}
+              aria-label="Next project"
+              className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center backdrop-blur-md border border-white/10 transition-all active:scale-95 cursor-pointer shadow-lg"
+            >
+              <svg
+                className="w-5 h-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </button>
+          </div>
         </div>
-      </div>
-    </section>
 
-    {/* 🍎 Apple Quick Look / Deep Dive Modal 🍎 */}
-    {selectedProject && (
-      <AppleProjectModal
-        project={selectedProject}
-        onClose={() => setSelectedProject(null)}
-      />
-    )}
-  </div>
-);
+        {/* Horizontal Cards Carousel Track */}
+        <div className="w-full overflow-visible py-4 my-auto">
+          <div
+            ref={trackRef}
+            className="flex gap-6 sm:gap-8 px-6 sm:px-10 lg:px-16 w-max will-change-transform"
+          >
+            {projects.map((project) => (
+              <div
+                key={project.id}
+                className="w-[320px] sm:w-[460px] md:w-[520px] lg:w-[560px] flex-shrink-0 group cursor-default"
+              >
+                {/* Apple Rounded Card Box */}
+                <div
+                  onClick={() => setSelectedProject(project)}
+                  className="relative aspect-[16/10] w-full rounded-[24px] sm:rounded-[28px] overflow-hidden bg-[#161617] border border-white/[0.08] group-hover:border-white/20 transition-all duration-500 shadow-[0_8px_30px_rgb(0,0,0,0.5)] cursor-pointer"
+                >
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                  />
+                  {/* Subtle vignette overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity" />
+
+                  {/* External link button overlay if available */}
+                  {project.link && project.link !== "#" && (
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="absolute bottom-3.5 right-3.5 w-9 h-9 rounded-full bg-black/60 hover:bg-black/80 text-white/90 hover:text-white flex items-center justify-center backdrop-blur-md border border-white/20 transition-all duration-300 hover:scale-110 shadow-md z-10"
+                      title="Open live website"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                        <polyline points="15 3 21 3 21 9" />
+                        <line x1="10" y1="14" x2="21" y2="3" />
+                      </svg>
+                    </a>
+                  )}
+                </div>
+
+                {/* Apple-style Content Underneath */}
+                <div className="mt-4 sm:mt-5">
+                  <p className="text-sm sm:text-base text-[#86868b] leading-relaxed line-clamp-3">
+                    <strong className="text-white font-semibold">
+                      {project.title}.{" "}
+                    </strong>
+                    {project.description}
+                  </p>
+
+                  {/* Tech Stack Pills */}
+                  <div className="flex flex-wrap items-center gap-2 mt-3.5">
+                    {project.stack.map((tech, idx) => (
+                      <span
+                        key={idx}
+                        className="text-[11px] sm:text-xs px-2.5 py-1 rounded-full bg-white/[0.04] text-neutral-300 border border-white/[0.08]"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Action Link */}
+                  <div className="mt-4 flex items-center gap-4">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedProject(project)}
+                      className="text-xs sm:text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors inline-flex items-center gap-1.5 group/link cursor-pointer"
+                    >
+                      <span>View Project Details</span>
+                      <span className="transition-transform group-hover/link:translate-x-1">
+                        →
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 🍎 Apple Quick Look / Deep Dive Modal 🍎 */}
+      {selectedProject && (
+        <AppleProjectModal
+          project={selectedProject}
+          onClose={() => setSelectedProject(null)}
+        />
+      )}
+    </div>
+  );
 };

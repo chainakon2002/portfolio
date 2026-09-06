@@ -294,3 +294,22 @@ h6 {
 .reveal.visible .design-bloom-text {
   opacity: 1;
 }
+
+/* 🍎 Featured Project 1 MacBook Left Bleed 🍎 */
+.macbook-left-bleed {
+  margin-left: -1.5rem; /* -ml-6 on mobile */
+}
+
+@media (min-width: 640px) {
+  .macbook-left-bleed {
+    margin-left: -2.5rem; /* -ml-10 on sm */
+  }
+}
+
+@media (min-width: 1024px) {
+  .macbook-left-bleed {
+    /* Touch exact screen left edge on desktop */
+    margin-left: calc(-1 * (max(0px, (100vw - 1280px) / 2) + 3rem));
+  }
+}
+
