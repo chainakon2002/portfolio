@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
@@ -20,11 +20,24 @@ export const Projects = () => {
   const location = useLocation();
   const sectionRef = useRef(null);
   const trackRef = useRef(null);
+  const scrollContainerRef = useRef(null);
   const headerRef = useRef(null);
   const m5GradientRef = useRef(null);
   const aboutGradientRef = useRef(null);
   const project1MacbookRef = useRef(null);
   const project1TriggerRef = useRef(null);
+
+  // 🍎 Interactive Horizontal Carousel State 🍎
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+  const [isDragging, setIsDragging] = useState(false);
+  const [hasCompletedFirstPass, setHasCompletedFirstPass] = useState(false);
+  const hasCompletedRef = useRef(false);
+  const startXRef = useRef(0);
+  const startScrollYRef = useRef(0);
+  const scrollLeftStartRef = useRef(0);
+  const dragDistanceRef = useRef(0);
+  const isMouseDownRef = useRef(false);
 
   // Scroll to section on hash change
   useEffect(() => {
@@ -106,17 +119,18 @@ export const Projects = () => {
     },
   ];
 
-  // GSAP Horizontal Scroll Pinning
+  const getScrollDistance = () => {
+    const track = trackRef.current;
+    if (!track) return 1200;
+    return Math.max(track.scrollWidth - window.innerWidth + 120, 600);
+  };
+
+  // 🍎 GSAP Horizontal Scroll Pinning: Locks ONLY on the first scroll down, then unlocks permanently 🍎
   useGSAP(
     () => {
       const section = sectionRef.current;
       const track = trackRef.current;
       if (!section || !track) return;
-
-      const getScrollDistance = () => {
-        // Total horizontal distance to scroll so that the last card is fully visible
-        return track.scrollWidth - window.innerWidth + 120;
-      };
 
       const tween = gsap.to(track, {
         x: () => -getScrollDistance(),
@@ -125,11 +139,35 @@ export const Projects = () => {
           id: "projects-horizontal-scroll",
           trigger: section,
           start: "top top",
-          end: () => `+=${Math.max(getScrollDistance(), 1200)}`,
-          scrub: 1,
+          end: () => `+=${getScrollDistance()}`,
+          scrub: 0.8,
           pin: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            if (!hasCompletedRef.current) {
+              setCanScrollLeft(self.progress > 0.02);
+              setCanScrollRight(self.progress < 0.98);
+            }
+          },
+          onLeave: (self) => {
+            // 🍎 One-Time Lock: When user finishes scrolling through cards, unpin permanently 🍎
+            if (!hasCompletedRef.current) {
+              hasCompletedRef.current = true;
+              setHasCompletedFirstPass(true);
+
+              const dist = self.end - self.start;
+              // Remove pin spacer and restore inline styling
+              self.kill(true);
+
+              // Compensate scroll position to prevent visual jump
+              window.scrollTo(0, window.scrollY - dist);
+
+              setTimeout(() => {
+                ScrollTrigger.refresh();
+              }, 60);
+            }
+          },
         },
       });
 
@@ -139,6 +177,114 @@ export const Projects = () => {
     },
     { scope: sectionRef }
   );
+
+  // 🍎 Trackpad 2-finger horizontal swipe support (translates deltaX to horizontal card scroll during 1st pass) 🍎
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const handleWheel = (e) => {
+      if (!hasCompletedRef.current) {
+        if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 2) {
+          const st = ScrollTrigger.getById("projects-horizontal-scroll");
+          if (!st || !st.isActive) return;
+
+          e.preventDefault();
+          const targetY = Math.max(st.start, Math.min(st.end, window.scrollY + e.deltaX * 1.3));
+          window.scrollTo({ top: targetY, behavior: "auto" });
+        }
+      }
+    };
+
+    section.addEventListener("wheel", handleWheel, { passive: false });
+    return () => section.removeEventListener("wheel", handleWheel);
+  }, []);
+
+  // 🍎 Update scroll buttons in completed mode (when cards container is horizontally scrollable) 🍎
+  useEffect(() => {
+    if (!hasCompletedFirstPass) return;
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const updateScrollButtons = () => {
+      const { scrollLeft, scrollWidth, clientWidth } = container;
+      setCanScrollLeft(scrollLeft > 10);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+    };
+
+    updateScrollButtons();
+    container.addEventListener("scroll", updateScrollButtons, { passive: true });
+    window.addEventListener("resize", updateScrollButtons);
+
+    return () => {
+      container.removeEventListener("scroll", updateScrollButtons);
+      window.removeEventListener("resize", updateScrollButtons);
+    };
+  }, [hasCompletedFirstPass]);
+
+  // 🍎 Mouse Click-and-Drag to pan cards left and right 🍎
+  const handleMouseDown = (e) => {
+    if (e.button !== 0) return;
+    isMouseDownRef.current = true;
+    startXRef.current = e.clientX;
+    startScrollYRef.current = window.scrollY;
+    if (scrollContainerRef.current) {
+      scrollLeftStartRef.current = scrollContainerRef.current.scrollLeft;
+    }
+    dragDistanceRef.current = 0;
+  };
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (!isMouseDownRef.current) return;
+      const dx = e.clientX - startXRef.current;
+      dragDistanceRef.current = Math.abs(dx);
+      if (Math.abs(dx) > 4) {
+        setIsDragging(true);
+      }
+
+      if (!hasCompletedRef.current) {
+        // Pinned Mode: translate horizontal drag to page scroll position
+        const st = ScrollTrigger.getById("projects-horizontal-scroll");
+        if (!st) return;
+
+        const maxDist = getScrollDistance();
+        if (maxDist <= 0) return;
+
+        const scrollRatio = (st.end - st.start) / maxDist;
+        const targetScrollY = Math.max(
+          st.start,
+          Math.min(st.end, startScrollYRef.current - dx * scrollRatio)
+        );
+        window.scrollTo({ top: targetScrollY, behavior: "auto" });
+      } else {
+        // Completed Mode: standard scrollLeft container drag
+        if (scrollContainerRef.current) {
+          scrollContainerRef.current.scrollLeft = scrollLeftStartRef.current - dx;
+        }
+      }
+    };
+
+    const handleMouseUp = () => {
+      if (isMouseDownRef.current) {
+        isMouseDownRef.current = false;
+        setTimeout(() => setIsDragging(false), 50);
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, []);
+
+  const handleCardClick = (project) => {
+    if (dragDistanceRef.current > 6) return;
+    setSelectedProject(project);
+  };
 
   // 🍎 Header Title Scroll Gradient Transition (About Me Blue/Cyan -> Apple M5 Sage/Slate) 🍎
   useGSAP(
@@ -196,20 +342,44 @@ export const Projects = () => {
     { scope: project1TriggerRef }
   );
 
-  // Arrow button handlers (smooth scroll by card width)
+  // 🍎 Arrow button handlers: Smoothly scroll left/right by one card step 🍎
   const handlePrev = () => {
-    const cardStep = window.innerWidth > 768 ? 580 : 340;
-    window.scrollBy({ top: -cardStep, behavior: "smooth" });
+    if (!hasCompletedRef.current) {
+      const st = ScrollTrigger.getById("projects-horizontal-scroll");
+      if (!st) return;
+      const cardStep = window.innerWidth > 768 ? 580 : 340;
+      const maxDist = getScrollDistance();
+      const scrollStep = (cardStep / maxDist) * (st.end - st.start);
+      const targetY = Math.max(st.start, window.scrollY - scrollStep);
+      window.scrollTo({ top: targetY, behavior: "smooth" });
+    } else {
+      const container = scrollContainerRef.current;
+      if (!container) return;
+      const cardStep = window.innerWidth > 768 ? 580 : 340;
+      container.scrollBy({ left: -cardStep, behavior: "smooth" });
+    }
   };
 
   const handleNext = () => {
-    const cardStep = window.innerWidth > 768 ? 580 : 340;
-    const rect = sectionRef.current?.getBoundingClientRect();
-    if (rect && rect.top > 60) {
-      sectionRef.current.scrollIntoView({ behavior: "smooth" });
-      return;
+    if (!hasCompletedRef.current) {
+      const st = ScrollTrigger.getById("projects-horizontal-scroll");
+      if (!st) return;
+      const cardStep = window.innerWidth > 768 ? 580 : 340;
+      const maxDist = getScrollDistance();
+      const scrollStep = (cardStep / maxDist) * (st.end - st.start);
+      const rect = sectionRef.current?.getBoundingClientRect();
+      if (rect && rect.top > 20) {
+        sectionRef.current.scrollIntoView({ behavior: "smooth" });
+        return;
+      }
+      const targetY = Math.min(st.end, window.scrollY + scrollStep);
+      window.scrollTo({ top: targetY, behavior: "smooth" });
+    } else {
+      const container = scrollContainerRef.current;
+      if (!container) return;
+      const cardStep = window.innerWidth > 768 ? 580 : 340;
+      container.scrollBy({ left: cardStep, behavior: "smooth" });
     }
-    window.scrollBy({ top: cardStep, behavior: "smooth" });
   };
 
   return (
@@ -439,14 +609,18 @@ export const Projects = () => {
       </div>
 
       {/* ============================================================ */}
-      {/* 🍎 ALL PROJECTS HORIZONTAL SLIDER 🍎 */}
+      {/* 🍎 ALL PROJECTS HORIZONTAL SLIDER (PINNED ON 1ST PASS) 🍎 */}
       {/* ============================================================ */}
       <section
         ref={sectionRef}
-        className="relative z-20 w-full h-screen min-h-screen bg-black overflow-hidden flex flex-col justify-between pt-16 sm:pt-20 pb-8 sm:pb-12 border-t border-white/[0.1] select-none"
+        className={`relative z-20 w-full bg-black border-t border-white/[0.1] select-none ${
+          !hasCompletedFirstPass
+            ? "h-screen min-h-screen overflow-hidden flex flex-col justify-between pt-16 sm:pt-20 pb-8 sm:pb-12"
+            : "min-h-[750px] lg:min-h-screen flex flex-col justify-center pt-16 sm:pt-20 pb-16 sm:pb-24"
+        }`}
       >
         {/* Apple Section Header */}
-        <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 flex items-end justify-between gap-4">
+        <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 mb-6 sm:mb-8 flex items-end justify-between gap-4">
           <div>
             <p className="text-xs sm:text-sm font-semibold tracking-widest text-[#86868b] uppercase mb-2">
               All Projects & Archive
@@ -461,8 +635,13 @@ export const Projects = () => {
           <div className="flex items-center gap-2.5 sm:gap-3">
             <button
               onClick={handlePrev}
+              disabled={!canScrollLeft}
               aria-label="Previous project"
-              className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center backdrop-blur-md border border-white/10 transition-all active:scale-95 cursor-pointer shadow-lg"
+              className={`w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center backdrop-blur-md border border-white/10 transition-all active:scale-95 shadow-lg ${
+                !canScrollLeft
+                  ? "opacity-30 cursor-not-allowed pointer-events-none"
+                  : "opacity-100 cursor-pointer"
+              }`}
             >
               <svg
                 className="w-5 h-5"
@@ -478,8 +657,13 @@ export const Projects = () => {
             </button>
             <button
               onClick={handleNext}
+              disabled={!canScrollRight}
               aria-label="Next project"
-              className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center backdrop-blur-md border border-white/10 transition-all active:scale-95 cursor-pointer shadow-lg"
+              className={`w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center backdrop-blur-md border border-white/10 transition-all active:scale-95 shadow-lg ${
+                !canScrollRight
+                  ? "opacity-30 cursor-not-allowed pointer-events-none"
+                  : "opacity-100 cursor-pointer"
+              }`}
             >
               <svg
                 className="w-5 h-5"
@@ -496,8 +680,22 @@ export const Projects = () => {
           </div>
         </div>
 
-        {/* Horizontal Cards Carousel Track */}
-        <div className="w-full overflow-visible py-4 my-auto">
+        {/* Horizontal Cards Carousel Track Container */}
+        <div
+          ref={scrollContainerRef}
+          onMouseDown={handleMouseDown}
+          className={`w-full py-4 my-auto cursor-grab active:cursor-grabbing ${
+            hasCompletedFirstPass ? "overflow-x-auto no-scrollbar" : "overflow-visible"
+          } ${isDragging ? "select-none" : ""}`}
+          style={
+            hasCompletedFirstPass
+              ? {
+                  WebkitOverflowScrolling: "touch",
+                  scrollBehavior: isDragging ? "auto" : "smooth",
+                }
+              : {}
+          }
+        >
           <div
             ref={trackRef}
             className="flex gap-6 sm:gap-8 px-6 sm:px-10 lg:px-16 w-max will-change-transform"
@@ -509,16 +707,17 @@ export const Projects = () => {
               >
                 {/* Apple Rounded Card Box */}
                 <div
-                  onClick={() => setSelectedProject(project)}
+                  onClick={() => handleCardClick(project)}
                   className="relative aspect-[16/10] w-full rounded-[24px] sm:rounded-[28px] overflow-hidden bg-[#161617] border border-white/[0.08] group-hover:border-white/20 transition-all duration-500 shadow-[0_8px_30px_rgb(0,0,0,0.5)] cursor-pointer"
                 >
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                    draggable="false"
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out select-none pointer-events-none"
                   />
                   {/* Subtle vignette overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity pointer-events-none" />
 
                   {/* External link button overlay if available */}
                   {project.link && project.link !== "#" && (
@@ -526,7 +725,13 @@ export const Projects = () => {
                       href={project.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={(e) => {
+                        if (dragDistanceRef.current > 6) {
+                          e.preventDefault();
+                          return;
+                        }
+                        e.stopPropagation();
+                      }}
                       className="absolute bottom-3.5 right-3.5 w-9 h-9 rounded-full bg-black/60 hover:bg-black/80 text-white/90 hover:text-white flex items-center justify-center backdrop-blur-md border border-white/20 transition-all duration-300 hover:scale-110 shadow-md z-10"
                       title="Open live website"
                     >
@@ -572,7 +777,7 @@ export const Projects = () => {
                   <div className="mt-4 flex items-center gap-4">
                     <button
                       type="button"
-                      onClick={() => setSelectedProject(project)}
+                      onClick={() => handleCardClick(project)}
                       className="text-xs sm:text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors inline-flex items-center gap-1.5 group/link cursor-pointer"
                     >
                       <span>View Project Details</span>
