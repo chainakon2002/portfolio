@@ -474,7 +474,7 @@ export const Projects = () => {
                   }}
                 >
                   <img
-                    src="/MacBook_Mockups_projeck.png"
+                    src="/MacBook_Mockups_projeck2.png"
                     alt="E-Commerce Web App on MacBook"
                     width={2048}
                     height={1235}
